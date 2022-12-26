@@ -1,5 +1,9 @@
 package com.example.task.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -7,34 +11,38 @@ import jakarta.validation.constraints.Max;
 
 import java.io.Serial;
 
-
+@Entity
 public class Persen {
-    @NotNull
-    @Serial
-    int id;
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private long id;
     @NotNull
     @Size(min=2,max=30)
-    String firstName;
+    private String firstName;
 
     @NotNull
     @Size(min=2,max=30)
-    String lastName;
+    private String lastName;
 
     @NotNull
     @Min(1)
     @Max(150)
-    int age;
+    private int age;
 
     @NotNull
     @Min(1)
     @Max(100)
-    double mark;
+    private double mark;
 
     @NotNull
-    boolean education;
+    private boolean education;
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     @NotNull
-    char category;
+    private char category;
 
     public char getCategory() {
         return category;
@@ -45,8 +53,7 @@ public class Persen {
     }
 
     public Persen(){}
-    public Persen(int id,String firstName, String lastName, int age, double mark, boolean education, char category){
-        this.id = id;
+    public Persen(String firstName, String lastName, int age, double mark, boolean education, char category){
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -55,7 +62,7 @@ public class Persen {
         this.category = category;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -100,7 +107,4 @@ public class Persen {
         this.firstName = firstName;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 }
