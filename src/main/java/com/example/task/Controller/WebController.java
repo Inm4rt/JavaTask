@@ -1,5 +1,7 @@
 package com.example.task.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +19,28 @@ import java.util.Optional;
 public class WebController {
     @Autowired
     private PesonService personService = new PesonService();
+    @Autowired
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    private ObjectMapper objectMapper;
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/")
     public Iterable<Persen> showAllPerson() {
         return personService.getAllPerson();
     }
 
     @GetMapping("/one")
-    public Optional<Persen> showOnePerson(@RequestParam(name = "id") long id, Persen persen){
-        return personService.getOnePerson(id);
+    //@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity showOnePerson(@RequestParam(name = "id") long id, Persen persen) throws JsonProcessingException {
+        Optional<Persen> serch = personService.getOnePerson(id);
+        if (serch.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(serch);
+        }
+        return  ResponseEntity.status(HttpStatus.OK).body(serch);
     }
     @PutMapping("/update")
-    public ResponseEntity<String> updatePerson(@Valid @RequestBody Persen person){
-
+    public ResponseEntity updatePerson(@Valid @RequestBody Persen person){
         personService.updatePerson(person);
-        return ResponseEntity.ok("valid");
+        return ResponseEntity.status(HttpStatus.OK).body(person);
     }
     @DeleteMapping("/delete")
     public void deletePerson(@RequestParam(name = "id") long id){
@@ -38,10 +48,10 @@ public class WebController {
     }
 
     @PostMapping("/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> AddPerson(@Valid @RequestBody Persen person){
+    //@ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity AddPerson(@Valid @RequestBody Persen person){
 
         personService.addPerson(person);
-        return ResponseEntity.ok("valid");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Valid");
     }
 }
