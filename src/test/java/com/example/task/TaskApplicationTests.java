@@ -1,10 +1,9 @@
 package com.example.task;
 
 import com.example.task.Controller.WebController;
-import com.example.task.model.Persen;
+import com.example.task.model.Person;
 import com.example.task.repository.PersonRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,29 +29,34 @@ class TaskApplicationTests {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private MockMvc mockMvc;
+
     @AfterEach
     public void resetDb() {
         personRepository.deleteAll();
     }
-    private Persen createTestPerson(String firstName,String lastName, int age,double mark, boolean education, char category) {
-        Persen person = new Persen(firstName,lastName,age,mark,education,category);
+
+    private Person createTestPerson(String firstName, String lastName, int age, double mark, boolean education, char category) {
+        Person person = new Person(firstName, lastName, age, mark, education, category);
         return personRepository.save(person);
     }
+
     @Test
     void checkAllPerson() throws Exception {
-        createTestPerson("Alexey","Nikolaev",21,99.9,true,'b');
-        createTestPerson("Vlad","Loh",22,1,false,'a');
+        createTestPerson("Alexey", "Nikolaev", 21, 99.9, true, 'b');
+        createTestPerson("Vlad", "Loh", 22, 1, false, 'a');
         this.mockMvc.perform(get("/")).andExpect(status().isOk());
     }
+
     @Test
     void checkOnePerson() throws Exception {
-        long id = createTestPerson("Alexey","Nikolaev",21,99.9,true,'b').getId();
-        createTestPerson("Vlad","Loh",22,1,false,'a');
-        this.mockMvc.perform(get("/one?id={id}",id))
+        long id = createTestPerson("Alexey", "Nikolaev", 21, 99.9, true, 'b').getId();
+        createTestPerson("Vlad", "Loh", 22, 1, false, 'a');
+        this.mockMvc.perform(get("/one?id={id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.firstName").value("Alexey"));
     }
+
     @Test
     public void givenId_whenGetNotExistingPerson_thenStatus404anExceptionThrown() throws Exception {
         mockMvc.perform(get("/one?id=1"))
@@ -63,19 +65,20 @@ class TaskApplicationTests {
 
     @Test
     void checkAddPerson() throws Exception {
-        Persen persen = new Persen("Alexey","Nikolaev",21,99.9,true,'b');
+        Person person = new Person("Alexey", "Nikolaev", 21, 99.9, true, 'b');
         this.mockMvc.perform(post("/")
-                                .content(objectMapper.writeValueAsString(persen))
-                                .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(person))
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isCreated());
     }
+
     @Test
     void updateAddPerson() throws Exception {
-        Persen persen = createTestPerson("Alexey","Nikolaev",21,99.9,true,'b');
-        persen.setLastName("Koly");
+        Person person = createTestPerson("Alexey", "Nikolaev", 21, 99.9, true, 'b');
+        person.setLastName("Koly");
         this.mockMvc.perform(put("/update")
-                        .content(objectMapper.writeValueAsString(persen))
+                        .content(objectMapper.writeValueAsString(person))
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
@@ -84,8 +87,8 @@ class TaskApplicationTests {
 
     @Test
     void deleteAddPerson() throws Exception {
-        Persen persen = createTestPerson("Alexey","Nikolaev",21,99.9,true,'b');
-        this.mockMvc.perform(delete("/delete?id={id}",persen.getId()))
+        Person person = createTestPerson("Alexey", "Nikolaev", 21, 99.9, true, 'b');
+        this.mockMvc.perform(delete("/delete?id={id}", person.getId()))
                 .andExpect(status().isOk());
     }
 

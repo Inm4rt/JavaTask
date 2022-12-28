@@ -4,24 +4,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Max;
-
-import java.io.Serial;
 
 @Entity
-public class Persen {
+public class Person {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @NotNull
-    @Size(min=2,max=30)
+    @Size(min = 2, max = 30)
     private String firstName;
 
     @NotNull
-    @Size(min=2,max=30)
+    @Size(min = 2, max = 30)
     private String lastName;
 
     @NotNull
@@ -52,8 +50,10 @@ public class Persen {
         this.category = category;
     }
 
-    public Persen(){}
-    public Persen(String firstName, String lastName, int age, double mark, boolean education, char category){
+    public Person() {
+    }
+
+    public Person(String firstName, String lastName, int age, double mark, boolean education, char category) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
