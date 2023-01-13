@@ -1,52 +1,55 @@
 package com.example.task.Controller;
 
+import com.example.task.model.Person;
+import com.example.task.service.PesonService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.task.model.Persen;
-import com.example.task.dao.PersonDAO;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
-import java.sql.SQLException;
-import java.util.List;
+import java.util.Optional;
 
 @RestController
-public class WebController implements WebMvcConfigurer{
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/results").setViewName("results");
-    }
+public class WebController {
+    @Autowired
+    private PesonService personService = new PesonService();
+    @Autowired
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    private ObjectMapper objectMapper;
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/")
-    public List<Persen> showAllPerson() throws SQLException {
-
-        return PersonDAO.select();
+    public Iterable<Person> showAllPerson() {
+        return personService.getAllPerson();
     }
 
     @GetMapping("/one")
-    public Persen showOnePerson(@RequestParam(name = "id") int id,Persen persen) throws SQLException {
-        return PersonDAO.selectOne(id);
+    public ResponseEntity showOnePerson(@RequestParam(name = "id") long id, Person person){
+        Optional<Person> searchPerson = personService.getOnePerson(id);
+        if (searchPerson.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(searchPerson);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(searchPerson);
     }
-    @PutMapping("/update")
-    public ResponseEntity<String> updatePerson(@RequestParam(name = "id") int id, @Valid @RequestBody Persen person) throws SQLException {
 
-        PersonDAO.update(id,person);
-        return ResponseEntity.ok("valid");
+    @PutMapping("/update")
+    public ResponseEntity updatePerson(@Valid @RequestBody Person person) {
+        personService.updatePerson(person);
+        return ResponseEntity.status(HttpStatus.OK).body(person);
     }
+
     @DeleteMapping("/delete")
-    public void deletePerson(@RequestParam(name = "id") int id) throws SQLException {
-        PersonDAO.delete(id);
+    public void deletePerson(@RequestParam(name = "id") long id) {
+        personService.deletePerson(id);
     }
 
     @PostMapping("/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> AddPerson(@Valid @RequestBody Persen person) throws SQLException {
+    public ResponseEntity AddPerson(@Valid @RequestBody Person person) {
 
-        PersonDAO.save(person);
-        return ResponseEntity.ok("valid");
+        personService.addPerson(person);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Valid");
     }
 }
