@@ -8,8 +8,10 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 @Entity
+@Data
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,76 +37,76 @@ public class Person {
     @NotNull
     private boolean education;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+//    public void setId(long id) {
+//        this.id = id;
+//    }
 
     @NotNull
     private char category;
 
-    public char getCategory() {
-        return category;
-    }
-
-    public void setCategory(char category) {
-        this.category = category;
-    }
-
-    public Person() {
-    }
-
-    public Person(String firstName, String lastName, int age, double mark, boolean education, char category) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = age;
-        this.mark = mark;
-        this.education = education;
-        this.category = category;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-
-    public boolean isEducation() {
-        return education;
-    }
-
-    public void setEducation(boolean education) {
-        this.education = education;
-    }
-
-    public double getMark() {
-        return mark;
-    }
-
-    public void setMark(double mark) {
-        this.mark = mark;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+//    public char getCategory() {
+//        return category;
+//    }
+//
+//    public void setCategory(char category) {
+//        this.category = category;
+//    }
+//
+//    public Person() {
+//    }
+//
+//    public Person(String firstName, String lastName, int age, double mark, boolean education, char category) {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.age = age;
+//        this.mark = mark;
+//        this.education = education;
+//        this.category = category;
+//    }
+//
+//    public long getId() {
+//        return id;
+//    }
+//
+//
+//    public boolean isEducation() {
+//        return education;
+//    }
+//
+//    public void setEducation(boolean education) {
+//        this.education = education;
+//    }
+//
+//    public double getMark() {
+//        return mark;
+//    }
+//
+//    public void setMark(double mark) {
+//        this.mark = mark;
+//    }
+//
+//    public int getAge() {
+//        return age;
+//    }
+//
+//    public void setAge(int age) {
+//        this.age = age;
+//    }
+//
+//    public String getLastName() {
+//        return lastName;
+//    }
+//
+//    public void setLastName(String lastName) {
+//        this.lastName = lastName;
+//    }
+//
+//    public String getFirstName() {
+//        return firstName;
+//    }
+//
+//    public void setFirstName(String firstName) {
+//        this.firstName = firstName;
+//    }
 
 }
