@@ -1,6 +1,8 @@
 package com.example.task.Controller;
 
 import com.example.task.dto.PersonDto;
+import com.example.task.exceptions.BusinessException;
+import com.example.task.exceptions.AddException;
 import com.example.task.service.PesonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,8 @@ public class WebController {
     }
 
     @GetMapping("/one")
-    public ResponseEntity showOnePerson(@RequestParam(name = "id") long id) {
+    public ResponseEntity showOnePerson(@RequestParam(name = "id") long id) throws BusinessException {
         PersonDto searchPerson = personService.getOnePerson(id);
-        if (searchPerson.getFirstName() == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(searchPerson);
-        }
         return ResponseEntity.status(HttpStatus.OK).body(searchPerson);
     }
 
@@ -40,9 +39,9 @@ public class WebController {
     }
 
     @PostMapping("/")
-    public ResponseEntity AddPerson(@Valid @RequestBody PersonDto person) {
-
+    public ResponseEntity AddPerson(@Valid @RequestBody PersonDto person){
         personService.addPerson(person);
         return ResponseEntity.status(HttpStatus.CREATED).body("Valid");
     }
+
 }
