@@ -5,6 +5,7 @@ import com.example.task.model.Person;
 import com.example.task.repository.PersonRepository;
 import com.example.task.utils.MappingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -21,12 +22,11 @@ public class PesonService {
     }
 
     public PersonDto getOnePerson(long id) {
-        return mappingUtils.mapToPersonDTO(personRepository.findById(id).orElse(new Person()));
+        return mappingUtils.mapToPersonDTO(personRepository.findOnePerson(id).orElse(new Person()));
     }
 
     public Iterable<PersonDto> getAllPerson() {
-        Iterable<PersonDto> a = personRepository.findAll().stream().map(mappingUtils::mapToPersonDTO).collect(Collectors.toList());
-        return a;
+        return personRepository.findAllPerson().stream().map(mappingUtils::mapToPersonDTO).collect(Collectors.toList());
     }
 
     public void deletePerson(long id) {
