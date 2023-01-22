@@ -21,7 +21,6 @@ public class PesonService {
     private final MappingUtils mappingUtils = new MappingUtils();
 
     public void addPerson(PersonDto person) {
-
         personRepository.save(mappingUtils.mapToPerson(person));
     }
 

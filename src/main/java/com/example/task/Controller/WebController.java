@@ -4,7 +4,7 @@ import com.example.task.dto.PersonDto;
 import com.example.task.exceptions.BusinessException;
 import com.example.task.exceptions.AddException;
 import com.example.task.service.PesonService;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
